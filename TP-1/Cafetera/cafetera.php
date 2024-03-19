@@ -43,9 +43,18 @@ class Cafetera {
         return $this->cantidadActual = $value;
     }
     // métodos
+    /**
+     * Permite llenar la cafetera
+     * @return void 
+     */
     public function llenarCafetera() {  // la cafetera estaria completamente llena
         $this->cantidadActual = $this->cantidadMaxima;  // independientemente del valor previo de cantidadActual, si la llenas, va a ser el maximo
     }
+    /**
+     * Permite servir cafe en una taza, evaluando las condiciones de cantidad
+     * @param float $cantidad
+     * @return void 
+     */
     public function servirTaza($cantidad) {  // $cantidad representa la cantidad de cafe que desea el consumidor en su taza
         $cantidadDisponible = $this->getCantidadActual() - $cantidad; // removemos la cantidad deseada de la cantidadActual
         if ($cantidadDisponible >= 0) {  // -5
@@ -55,9 +64,18 @@ class Cafetera {
             echo "Cantidad de café insuficiente. Sirviendo lo disponible" . "\n";
         }
     }
+    /**
+     * Permite vaciar la cafetera
+     * @return void 
+     */
     public function vaciarCafetera() {
         $this->setCantidadActual(0);
     }
+    /**
+     * Permite agregar cafe a la cafetera, evaluando las condiciones de cantidad
+     * @param $cantidad
+     * @return void
+     */
     public function agregarCafe($cantidad) {
        if ($cantidad > $this->getCantidadMaxima()) {  // cantidad = 200  a  70   
            $cantidadPrevia = $this->getCantidadActual();  // 50
@@ -74,6 +92,10 @@ class Cafetera {
             echo "Sirviendo cantidad: (" . $cantidad . ")" . "\n";
        }
     }
+    /**
+     * Devuelve los valores de las variables intancia.
+     * @return string
+     */ 
     public function __toString() {
         return "Cantidad maxima: " . $this->getCantidadMaxima() . "\n" . "Cantidad Actual: " . $this->getCantidadActual() . "\n";
     }
