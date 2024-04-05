@@ -44,7 +44,7 @@ class Lectura {
     // métodos
     public function siguientePagina() {
         /*
-        $libro = $this->getLibro();
+        $libro = $this->getLibro();   
         $libro->getCantidadPaginas();
         */
 
@@ -78,7 +78,7 @@ class Lectura {
     public function libroLeido($titulo) {
         $libroLeido = false;
         $librosLeidos = $this->getLibrosLeidos();
-        $cantidadLibrosLeidos = count($this->getLibrosLeidos()); 
+        $cantidadLibrosLeidos = count($this->getLibrosLeidos()); // 3
         $i = 0;
         while ($i < $cantidadLibrosLeidos && $libroLeido == false) {
             if ($titulo == $librosLeidos[$i]->getTitulo()) {
