@@ -16,10 +16,10 @@ $tramite3 = new Tramite('Retirar dinero' , 'retiro');
 $tramite4 = new Tramite('Depositar dinero' , 'deposito');
 
 // $tipoTramite , $limiteCola , $clientesEnCola
-$mostrador1 = new Mostrador('factura' , 15 , 15);
-$mostrador2 = new Mostrador('factura' , 15 , 15);
-$mostrador3 = new Mostrador('deposito' , 15 , 2);
-$mostrador4 = new Mostrador('factura' , 10 , 15);
+$mostrador1 = new Mostrador('pagar x' , 15 , 14);
+$mostrador2 = new Mostrador('retirar' , 15 , 5);
+$mostrador3 = new Mostrador('retirar' , 15 , 6);
+$mostrador4 = new Mostrador('pagar y' , 10 , 15);
 $coleccionMostradores = [$mostrador1, $mostrador2, $mostrador3, $mostrador4];
 // testing mostrador y tramite
 /*
@@ -38,10 +38,10 @@ $cliente3 = new Cliente('Matias' , 'Perez' , $tramite3);
 // $coleccionMostradores , $objCliente
 
 $banco = new Banco($coleccionMostradores , $cliente1);
-$asd = $banco->mejorMostradorPara('factura');
+$asd = $banco->mejorMostradorPara('retirar');
 
-if ($asd) {
-    echo "el mejor es: " . $asd;
+if ($asd == null) {
+    echo "filas llenas";
 } else {
-    echo "Estan todos ocupados";
+    print_r($asd);
 }

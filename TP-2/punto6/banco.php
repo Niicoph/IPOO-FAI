@@ -51,9 +51,9 @@ class Banco {
     public function setCliente($cliente) {
         $this->cliente = $cliente;
     }
-    public function mostradoresQueAtienden($tipoTramite) {  // $tramite = $objTramite = new Tramite()
+    public function mostradoresQueAtienden($tipoTramite) {  
         $coleccionMostradorPorTipoTramite = [];
-        $coleccionMostradores = $this->getMostradores();
+        $coleccionMostradores = $this->getMostradores(); // [$mostrador1,$mostrador2,$mostrador3] // $mostrador1 = new Mostrador('tipoTramite')
         foreach($coleccionMostradores as $mostrador) {
             if ($mostrador->getTipoTramite() == $tipoTramite) {
                 array_push($coleccionMostradorPorTipoTramite, $mostrador);
@@ -63,22 +63,22 @@ class Banco {
     }
     public function mejorMostradorPara($tipoTramite) {
         $coleccionMostradores = $this->getMostradores(); 
-        $bandera = null;
+        $x = null;
         $minimoCola = null;
     
-        foreach($coleccionMostradores as $mostrador) {
-            if ($mostrador->getTipoTramite() == $tipoTramite) {            
-                $cantidadPersonasEnFila = $mostrador->getClientesEnCola();  
-                $limitePersonasEnFila = $mostrador->getLimiteCola();        
-                if ($cantidadPersonasEnFila < $limitePersonasEnFila) {     
-                    if ($minimoCola == null || $cantidadPersonasEnFila < $minimoCola) {  
-                        $minimoCola = $cantidadPersonasEnFila;                          
-                        $bandera = $mostrador;                                             
+        foreach($coleccionMostradores as $mostrador) {  // iteramos sobre cada mostrador de la coleccion de mostradores 
+            if ($mostrador->getTipoTramite() == $tipoTramite) {  // si el tipo de tramite del mostrador coincide con el pasado por parametro entras al if   
+                $cantidadPersonasEnFila = $mostrador->getClientesEnCola();   // obtenes la cantidad de gente que hay en la cola
+                $limitePersonasEnFila = $mostrador->getLimiteCola();        // obtenes el limite maximo de gente posible en cola
+                if ($cantidadPersonasEnFila < $limitePersonasEnFila) {     // si cantidad de gente en cola es menor que el limite de gente posible entras al if
+                    if ($minimoCola == null || $cantidadPersonasEnFila < $minimoCola) {  // si el minimo es nulo o la cantidad de gente en cola es menor que el minimo
+                        $minimoCola = $cantidadPersonasEnFila;                          // el minimo comienza a valer la cantidad de gente en cola
+                        $x = $mostrador;                                                // guardas el mostrador con x personas
                     }
                 }
             }
         }
-        return $bandera;
+        return $x;
     }
     public function atenderCliente($cliente) { 
         $tramiteCliente = $cliente->getObjTramite();
