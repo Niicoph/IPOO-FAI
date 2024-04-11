@@ -16,20 +16,20 @@ $coleccionPasajeros2 = [$pasajero1, $pasajero2, $pasajero3];
 $coleccionPasajeros3 = [$pasajero1, $pasajero2];
 // Creamos los responsables del viaje y los agregamos a una coleccion
 /* Datos del constructor: $numeroEmpleado , $numeroLicencia , $nombre , $apellido */
-$responsable1 = new ResponsableV(1, 123, "Juan", "Perez");
-$responsable2 = new ResponsableV(2, 456, "Maria", "Gomez");
-$responsable3 = new ResponsableV(3, 789, "Carlos", "Lopez");
-$responsable4 = new ResponsableV(4,3223, "Laura" , "Gomez");
-$coleccionResponsables = [$responsable1, $responsable2, $responsable3, $responsable4];
+$responsableV = new ResponsableV(1, 123, "Juan", "Perez");
 // Creamos el viaje
 /* Datos del constructor: $codigoViaje , $destino , $cantidadMaximaPasajeros , $coleccionPasajeros , $responsableV*/
-$viaje1 = new Viaje(1, "Cordoba", 5, $coleccionPasajeros1 , $responsable1);
-$viaje2 = new Viaje(2, "Mendoza", 40, $coleccionPasajeros2, $responsable2);
-$viaje3 = new Viaje(3, "Salta", 50, $coleccionPasajeros3 , $responsable3);
+$viaje1 = new Viaje(1, "Cordoba", 5, $coleccionPasajeros1 , $responsableV);
+$viaje2 = new Viaje(2, "Mendoza", 40, $coleccionPasajeros2, $responsableV);
+$viaje3 = new Viaje(3, "Salta", 50, $coleccionPasajeros3 , $responsableV);
 $coleccionViajes = [$viaje1, $viaje2, $viaje3];
 // Creamos el menú para modificar o ver los datos del viaje
 
-do {
+/**
+ * Funcion que muestra el menu de opciones
+ * return string
+ */
+function mostrarMenu() {
     echo "********* Menu de opciones *********\n";
     echo "1. Ver coleccion de viajes\n";
     echo "2. Agregar viaje a la coleccion\n";
@@ -37,213 +37,189 @@ do {
     echo "4. Ver datos de un pasajero \n";
     echo "5. Modificar los datos de un pasajero de un viaje\n";
     echo "6. Agregar pasajero a un viaje\n";
-    echo "7. Ver datos de un viaje\n";
-    echo "8. Salir\n";
+    echo "7. Eliminar pasajero de un viaje\n";
+    echo "8. Ver datos de un viaje\n";
+    echo "9. Salir\n";
     echo "************************************\n";
+}
+/**
+ * Funcion que busca un viaje en la coleccion de viajes
+ * @param int $codigo
+ * @return Viaje
+ */
+function buscarViaje($codigo) {
+    global $coleccionViajes;
+    $i = 0;
+    $encontrado = false;
+    while ($i < count($coleccionViajes) && !$encontrado) {
+        if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
+            $viaje = $coleccionViajes[$i];
+            $encontrado = true;
+        }
+        $i++;
+    }
+    return $viaje;
+}
+
+
+
+do {
+    mostrarMenu();
     echo "Ingrese una opcion: ";
     $opcion = trim(fgets(STDIN));
     $salir = false;
     switch ($opcion) {
-        case 1: 
-            foreach($coleccionViajes as $viaje) {
-                $cantidadPasajeros = count($viaje->getColeccionPasajeros());
-                echo "Codigo de viaje: " . $viaje->getCodigoViaje() . "\n";
-                echo "Destino: " . $viaje->getDestinoViaje() . "\n";
-                echo "Cantidad maxima de pasajeros: " . $viaje->getCantidadMaximaPasajeros() . "\n";
-                echo "Cantidad Pasajeros: " . $cantidadPasajeros . "\n";
-                echo "Responsable del viaje => " . "\n" . $viaje->getResponsableViaje();
-                echo "----------**********----------\n";
+        case 1:
+            echo "Mostrando coleccion de Viajes -> \n";
+            foreach ($coleccionViajes as $viaje) {
+                echo $viaje . "\n";
+                echo "--------------------------------\n";
             }
             break;
         case 2: 
-            echo "Ingrese el codigo del viaje:";
+            echo "Ingrese los datos del nuevo viaje -> \n";
+            echo "Ingrese el codigo: ";
             $codigo = trim(fgets(STDIN));
-            $i = 0;
-            $encontrado = false;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    echo "El codigo de viaje ya existe\n";
-                    $encontrado = true;
-                }
-                $i++;
-            }
-            if (!$encontrado) {
-                echo "Ingrese el destino del viaje: ";
-                $destino = trim(fgets(STDIN)) . "\n";
-                echo "Ingrese la cantidad maxima de pasajeros: ";
-                $cantidadMaxima = (int)trim(fgets(STDIN)) . "\n";
-                echo "Ingrese el numero de empleado del responsable: ";
-                $numeroEmpleado = (int)trim(fgets(STDIN)) . "\n";
-                $encontrado2 = false;
-                $i = 0;
-                while ($i < count($coleccionResponsables) && !$encontrado2) {
-                    if ($coleccionResponsables[$i]->getNumeroEmpleado() == $numeroEmpleado) {
-                        $viaje = new Viaje($codigo, $destino, $cantidadMaxima, [], $coleccionResponsables[$i]);
-                        $encontrado2 = true;
-                    }
-                    $i++;
-                }
-                if (!$encontrado2) {
-                    echo "No se encontro el responsable con el numero de empleado ingresado\n";
-                }
-    
-            }
+            echo "Ingrese el destino: ";
+            $destino = trim(fgets(STDIN));
+            echo "Ingrese la cantidad maxima de pasajeros: ";
+            $cantidadMaximaPasajeros = trim(fgets(STDIN));
+            $viaje = new Viaje($codigo, $destino, $cantidadMaximaPasajeros, [], $responsableV);
+            array_push($coleccionViajes, $viaje);
+            echo "Viaje agregado correctamente\n";
             break;
         case 3:
-            echo "Ingrese el codigo del viaje: ";
-            $codigo = trim(fgets(STDIN)) . "\n";
-            $encontrado = false;
-            $i = 0;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    echo "Ingrese la nueva cantidad maxima de pasajeros: ";
-                    $cantidadMaxima = (int)trim(fgets(STDIN)) . "\n";
-                    $coleccionViajes[$i]->setCantidadMaximaPasajeros($cantidadMaxima);
-                    echo "Cantidad maxima de pasajeros modificada\n";
-                    $encontrado = true;
-                }
-                $i++;
-            }
-            if (!$encontrado) {
-                echo "No se encontro el viaje con el codigo ingresado\n";
-            }
-            break;
-            
-        case 4:
-            echo "Ingrese el codigo de viaje:";
+            echo "Ingrese el codigo del viaje a modificar -> ";
             $codigo = trim(fgets(STDIN));
-            $encontrado = false;
-            $i = 0;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    echo "Ingrese el documento del pasajero: ";
-                    $documento = trim(fgets(STDIN));
-                    $pasajerosDelViaje = $coleccionViajes[$i]->getColeccionPasajeros(); 
-                    $encontrado2 = false;
-                    $j = 0;
-                    while ($j < count($pasajerosDelViaje) && !$encontrado2) {
-                        if ($pasajerosDelViaje[$j]->getDocumento() == $documento) {
-                            echo "Nombre: " . $pasajerosDelViaje[$j]->getNombre() . "\n";
-                            echo "Apellido: " . $pasajerosDelViaje[$j]->getApellido() . "\n";
-                            echo "Documento: " . $pasajerosDelViaje[$j]->getDocumento() . "\n";
-                            echo "Telefono: " . $pasajerosDelViaje[$j]->getTelefono() . "\n";
-                            echo "Pertenece al viaje: " . $codigo . "\n";
-                            $encontrado2 = true;
-                        }
-                        $j++;
-                    }
-                    if (!$encontrado2) {
-                        echo "No se encontro el pasajero con el documento ingresado\n";
-                    }
-                    $encontrado = true;
-                }
-                $i++;
-            }
-            if (!$encontrado) {
-                echo "No se encontro el viaje con el codigo ingresado\n";
+            if (buscarViaje($codigo)) {
+                $viaje = buscarViaje($codigo);
+                echo "Ingrese la nueva cantidad maxima de pasajeros: ";
+                $cantidadMaximaPasajeros = trim(fgets(STDIN));
+                $viaje->setCantidadMaximaPasajeros($cantidadMaximaPasajeros);
+            } else {
+                echo "No se encontro el viaje\n";
             }
             break;
-
-        case 5:
-            echo "Ingrese el codigo del viaje: ";
-            $codigo = trim(fgets(STDIN)) . "\n";
-            $encontrado = false;
-            $i = 0;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    echo "Ingrese el documento del pasajero: ";
-                    $documento = trim(fgets(STDIN)) . "\n";
-                    $encontrado2 = false;
-                    $j = 0;
-                    while ($j < count($coleccionViajes[$i]->getColeccionPasajeros()) && !$encontrado2) {
-                        if ($coleccionViajes[$i]->getColeccionPasajeros()[$j]->getDocumento() == $documento) {
-                            echo "Ingrese el nuevo nombre del pasajero: ";
-                            $nombre = trim(fgets(STDIN)) . "\n";
-                            echo "Ingrese el nuevo apellido del pasajero: ";
-                            $apellido = trim(fgets(STDIN)) . "\n";
-                            echo "Ingrese el nuevo telefono del pasajero: ";
-                            $telefono = trim(fgets(STDIN)) . "\n";
-                            $coleccionViajes[$i]->getColeccionPasajeros()[$j]->setTelefono($telefono);
-                            $coleccionViajes[$i]->getColeccionPasajeros()[$j]->setNombre($nombre);
-                            $coleccionViajes[$i]->getColeccionPasajeros()[$j]->setApellido($apellido);
-                            echo "Datos del pasajero modificados\n";
-                            $encontrado2 = true;
-                        }
-                        $j++;
-                    }
-                    if (!$encontrado2) {
-                        echo "No se encontro el pasajero con el documento ingresado\n";
-                    }
-                    $encontrado = true;
-                }
-                $i++;
-            }
-            if (!$encontrado) {
-                echo "No se encontro el viaje con el codigo ingresado\n";
-            }
-            break;
-
-        case 6:
-            echo "Ingrese el codigo del viaje: ";
-            $codigo = trim(fgets(STDIN)) . "\n";
-            $encontrado = false;
-            $i = 0;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    $pasajerosDelViaje = $coleccionViajes[$i]->getColeccionPasajeros(); 
-                    $cantidadPasajeros = count($pasajerosDelViaje);
-                    echo "Ingrese el documento del pasajero (para verificar que no exista): ";
-                    $documento = trim(fgets(STDIN)) . "\n";
-                    $encontrado2 = false;
-                    $j = 0;
-                    while ($j < count($pasajerosDelViaje) && !$encontrado2) {
-                        if ($pasajerosDelViaje[$j]->getDocumento() == $documento) {
-                            echo "El pasajero ya se encuentra en el viaje\n";
-                            $encontrado2 = true;
-                        }
-                        $j++;
-                    }
-                    if (!$encontrado2 && $cantidadPasajeros <= $coleccionViajes[$i]->getCantidadMaximaPasajeros() ){
-                        echo "Ingrese el nombre del pasajero: ";
-                        $nombre = trim(fgets(STDIN)) . "\n";
-                        echo "Ingrese el apellido del pasajero: ";
-                        $apellido = trim(fgets(STDIN)) . "\n";
-                        echo "Ingrese el telefono del pasajero: ";
-                        $telefono = trim(fgets(STDIN)) . "\n";
-                        $pasajero = new Pasajero($nombre, $apellido, $documento , $telefono);
-                        array_push($pasajerosDelViaje, $pasajero);
-                        $coleccionViajes[$i]->setColeccionPasajeros($pasajerosDelViaje);
-                        echo "Pasajero agregado al viaje\n";
-                    } else {
-                        echo "No se puede agregar mas pasajeros al viaje\n";
-                    }
-                    $encontrado = true;
-                }
-                $i++;
-            }
-            if (!$encontrado) {
-                echo "No se encontro el viaje con el codigo ingresado\n";
-            }
-            break;
-        case 7: 
-            echo "Ingrese el codigo del viaje: ";
-            $codigo = trim(fgets(STDIN)) . "\n";
-            $encontrado = false;
-            $i = 0;
-            while ($i < count($coleccionViajes) && !$encontrado) {
-                if ($coleccionViajes[$i]->getCodigoViaje() == $codigo) {
-                    $objViaje = $coleccionViajes[$i];
-                    echo $objViaje;
-                    $encontrado = true;
+        case 4:
+            echo "Ingrese el codigo del viaje -> ";
+            $codigo = trim(fgets(STDIN));
+            $viaje = buscarViaje($codigo);
+            if ($viaje) {
+                echo "Ingrese el documento del pasajero a buscar -> ";
+                $documento = trim(fgets(STDIN));
+                $pasajero = $viaje->buscarPasajero($documento)["Pasajero"];
+                if ($pasajero) {
+                    echo $pasajero . "\n";
                 } else {
-                    echo "No se encontro el viaje con el codigo ingresado\n";
+                    echo "No se encontro el pasajero\n";
                 }
-                $i++;
+            } else {
+                echo "No se encontro el viaje\n";
+            }
+            break;
+        case 5: 
+            echo "Ingrese el codigo del viaje -> ";
+            $codigo = trim(fgets(STDIN));
+            $viaje = buscarViaje($codigo);
+            if ($viaje) {
+                echo "Ingrese el documento del pasajero a modificar ->"; 
+                $documento = trim(fgets(STDIN));
+                $pasajero = $viaje->buscarPasajero($documento)["Pasajero"];
+                if ($pasajero) {
+                    echo "Que dato desea modificar? \n";
+                    echo "1) Nombre  2) Apellido  3) Documento  4) Telefono\n";
+                    echo "Ingrese una opcion: ";
+                    $opcion = trim(fgets(STDIN));
+                    switch ($opcion) {
+                        case 1:
+                            echo "Ingrese el nuevo nombre: ";
+                            $nombre = trim(fgets(STDIN));
+                            $viaje->modificarNombrePasajero($nombre, $pasajero);
+                            echo "Nombre modificado correctamente\n";
+                            break;
+                        case 2:
+                            echo "Ingrese el nuevo apellido: ";
+                            $apellido = trim(fgets(STDIN));
+                            $viaje->modificarApellidoPasajero($apellido, $pasajero);
+                            echo "Apellido modificado correctamente\n";
+                            break;
+                        case 3:
+                            echo "Ingrese el nuevo documento: ";
+                            $documento = trim(fgets(STDIN));
+                            $viaje->modificarDocumentoPasajero($documento, $pasajero);
+                            echo "Documento modificado correctamente\n";
+                            break;
+                        case 4:
+                            echo "Ingrese el nuevo telefono: ";
+                            $telefono = trim(fgets(STDIN));
+                            $viaje->modificarTelefonoPasajero($telefono, $pasajero);
+                            echo "Telefono modificado correctamente\n";
+                            break;
+                    }
+                } else {
+                    echo "No se encontro el pasajero en ese viaje\n";
+                }
+            }
+            
+            break;
+        case 6:
+            echo "Ingrese el codigo del viaje al que desea agregar un pasajero -> ";
+            $codigo = trim(fgets(STDIN));
+            $viaje = buscarViaje($codigo);
+            if ($viaje) {
+                echo "Ingrese el documento del pasajero a agregar ->";
+                $documento = trim(fgets(STDIN));
+                $pasajero = $viaje->buscarPasajero($documento)["Pasajero"];
+                if (!$pasajero) {
+                    $disponibilidad = $viaje->verificarDisponibilidad();
+                    if ($disponibilidad) {
+                        echo "Ingrese los datos del pasajero -> \n";
+                        echo "Ingrese el nombre: ";
+                        $nombre = trim(fgets(STDIN));
+                        echo "Ingrese el apellido: ";
+                        $apellido = trim(fgets(STDIN));
+                        echo "Ingrese el documento: ";
+                        $documento = trim(fgets(STDIN));
+                        echo "Ingrese el telefono: ";
+                        $telefono = trim(fgets(STDIN));
+                        $pasajero = new Pasajero($nombre, $apellido, $documento, $telefono);
+                        $viaje->agregarPasajero($pasajero);
+                        echo "Pasajero agregado correctamente\n";
+                    } else {
+                        echo "No hay disponibilidad para agregar pasajeros\n";
+                    }
+                } else {
+                    echo "El pasajero ya se encuentra en el viaje\n";
+                }
+            } else {
+                echo "No se encontro el viaje\n";
+            }
+            break;
+        case 7:
+            echo "Ingrese el codigo del viaje al que desea eliminar un pasajero -> ";
+            $codigo = trim(fgets(STDIN));
+            $viaje = buscarViaje($codigo);
+            if ($viaje) {
+                echo "Ingrese el documento del pasajero a eliminar -> ";
+                $documento = trim(fgets(STDIN));
+                $string = $viaje->eliminarPasajero($documento);
+                echo $string . "\n";
+            } else {
+                echo "No se encontro el viaje\n";
             }
             break;
         case 8:
+            echo "Ingrese el codigo del viaje a ver -> ";
+            $codigo = trim(fgets(STDIN));
+            $viaje = buscarViaje($codigo);
+            if ($viaje) {
+                echo $viaje . "\n";
+            } else {
+                echo "No se encontro el viaje\n";
+            }
+            break;
+        case 9:
             $salir = true;
             break;
     }
-
 } while (!$salir);

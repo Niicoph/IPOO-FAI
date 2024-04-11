@@ -27,14 +27,14 @@ class Viaje {
     private $destino;
     private $cantidadMaximaPasajeros;
     private $coleccionPasajeros;   
-    private $responsableViaje;
+    private $objResponsableViaje;
     // constructor 
     public function __construct($codigoViaje , $destino , $cantidadMaximaPasajeros , $coleccionPasajeros , $responsableViaje) {
         $this->codigoViaje = $codigoViaje;
         $this->destino = $destino;
         $this->cantidadMaximaPasajeros = $cantidadMaximaPasajeros;
         $this->coleccionPasajeros = $coleccionPasajeros;
-        $this->responsableViaje = $responsableViaje;
+        $this->objResponsableViaje = $responsableViaje;
     }
     // getters
     public function getCodigoViaje() {
@@ -50,7 +50,7 @@ class Viaje {
         return $this->coleccionPasajeros;
     }
     public function getResponsableViaje() {
-        return $this->responsableViaje;
+        return $this->objResponsableViaje;
     }
     // setters
     public function setCodigoViaje($codigo) {
@@ -66,7 +66,65 @@ class Viaje {
     	$this->coleccionPasajeros = $coleccion;
     }
     public function setResponsableViaje($responsableViaje) {
-        $this->responsableViaje = $responsableViaje;
+        $this->objResponsableViaje = $responsableViaje;
+    }
+    // métodos                                            
+    public function buscarPasajero($documento) {
+        $coleccionPasajeros = $this->coleccionPasajeros;
+        $pasajero = null;
+        $index = 0;
+        $encontrado = false;
+        $i = 0;
+        while( $i < count($coleccionPasajeros) && $encontrado == false ) {
+            if ($coleccionPasajeros[$i]->getDocumento() == $documento) {
+                $pasajero = $coleccionPasajeros[$i];
+                $index = $i;
+                $encontrado = true;
+            }
+            $i++;
+        }
+        return ["Pasajero" => $pasajero , "Index" => $index];
+    }
+    public function modificarNombrePasajero($nombre , $objPasajero) {
+        $objPasajero->setNombre($nombre);
+    }
+    public function modificarApellidoPasajero($apellido , $objPasajero) {
+        $objPasajero->setApellido($apellido);
+    }
+    public function modificarTelefonoPasajero($telefono , $objPasajero) {
+        $objPasajero->setTelefono($telefono);
+    }
+    public function modificarDocumentoPasajero($documento , $objPasajero) {
+        $objPasajero->setDocumento($documento);
+    }
+    public function verificarDisponibilidad() {
+        $disponibilidad = false;
+        $cantidadMaxima = $this->getCantidadMaximaPasajeros();
+        $cantidadActual = count($this->coleccionPasajeros);
+        if ($cantidadMaxima > $cantidadActual) {
+           $disponibilidad = true;
+        }
+        return $disponibilidad;
+    }
+    public function agregarPasajero($objPasajero) {
+        $coleccionPasajeros = $this->getColeccionPasajeros();
+        array_push($coleccionPasajeros , $objPasajero);
+        $this->setColeccionPasajeros($coleccionPasajeros);
+        $string = "Pasajero Agregado Correctamente";
+        return $string;
+    }
+    public function eliminarPasajero($documento) {
+        $pasajero = $this->buscarPasajero($documento);
+        if ($pasajero["Pasajero"]) {
+            $index = $pasajero["Index"];
+            $coleccionPasajeros = $this->getColeccionPasajeros();
+            array_splice($coleccionPasajeros , $index , 1);
+            $this->setColeccionPasajeros($coleccionPasajeros);
+            $string = "Pasajero Eliminado Correctamente";
+        } else {
+            $string = "No se encontro el pasajero";
+        }
+        return $string;
     }
     public function __toString() {
         $cantidadPasajeros = count($this->coleccionPasajeros);
@@ -75,10 +133,7 @@ class Viaje {
             "Destino: " . $this->destino . "\n" .
             "Cantidad Maxima de Pasajeros: " . $this->cantidadMaximaPasajeros . "\n" .
             "Pasajeros: " . $cantidadPasajeros . "\n" .
-            "Responsable del Viaje => \n" .  $this->responsableViaje . "\n";
+            "Responsable del Viaje => \n" .  $this->objResponsableViaje . "\n";
         return $string;
     }
-
-
-
 }
